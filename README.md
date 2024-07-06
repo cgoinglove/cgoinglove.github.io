@@ -1,6 +1,6 @@
 # Blog
 
-[Go Site][https://cgoinglove.github.io/]
+[Go Site](https://cgoinglove.github.io/)
 
 
 A sleek static blog built with [Next.js](https://nextjs.org/) and hosted on GitHub Pages. Simplified post creation using Plop and automated deployment with GitHub Actions. Utilizes [next-remote-mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx#remote-mdx) and [glob](!https://github.com/isaacs/node-glob#readme) for static site generation.
