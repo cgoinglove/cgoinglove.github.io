@@ -1,0 +1,13 @@
+{
+  "git.autofetch": true,
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "[handlebars]": {
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false
+  },
+  "editor.formatOnSave": true,
+}
