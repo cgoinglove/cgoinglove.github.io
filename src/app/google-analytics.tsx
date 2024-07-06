@@ -5,7 +5,7 @@ export default function GoogleAnalytics() {
   return (
     <Script
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-JTEWZN846N"
+      src="https://www.googletagmanager.com/gtag/js?id=G-NYZXQP4Y7Q"
       onLoad={() => {
         const self = window as any;
         self.dataLayer = self.dataLayer || [];
@@ -13,7 +13,7 @@ export default function GoogleAnalytics() {
           self.dataLayer.push(args);
         }
         gtag('js', new Date());
-        gtag('config', 'G-JTEWZN846N');
+        gtag('config', 'G-NYZXQP4Y7Q');
       }}
     />
   );
