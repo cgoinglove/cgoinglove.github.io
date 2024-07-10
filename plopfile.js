@@ -19,12 +19,11 @@ const slugify = (text) => {
     .toString()
     .toLowerCase()
     .replace(/\s+/g, '-') // 공백을 대시로 바꿈
-    .replace(/[^\w\-]+/g, '') // 특수문자 제거
     .replace(/\-\-+/g, '-') // 여러 개의 대시를 하나로 바꿈
     .replace(/^-+/, '') // 선행하는 대시 제거
     .replace(/-+$/, ''); // 후행하는 대시 제거
 };
-('');
+
 /**
  *
  * @param {import('plop').NodePlopAPI} plop

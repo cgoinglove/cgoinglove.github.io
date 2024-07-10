@@ -1,22 +1,26 @@
 # Blog
 
-[Go Site](https://cgoinglove.github.io/)
+> [Go Site](https://cgoinglove.github.io/)
 
 
-A sleek static blog built with [Next.js](https://nextjs.org/) and hosted on GitHub Pages. Simplified post creation using Plop and automated deployment with GitHub Actions. Utilizes [next-remote-mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx#remote-mdx) and [glob](!https://github.com/isaacs/node-glob#readme) for static site generation.
+[Next.js](https://nextjs.org/) export 로 구축된 정적 블로그로, GitHub Pages에 호스팅됩니다. [Plop.js](https://plopjs.com/)을 사용하여 포스트 생성을 정규화하고 GitHub Actions로 자동 배포됩니다. 정적 사이트 생성을 위해 [next-remote-mdx](https://nextjs.org/docs/app/building-your-application/configuring/mdx#remote-mdx)와 [glob](!https://github.com/isaacs/node-glob#readme)을 활용합니다.
 
-## Generating New Posts
+## 새 포스트 생성
 
-Create new posts effortlessly with [Plop.js](https://plopjs.com/)
+커맨드 사용하여 손쉽게 새 포스트를 생성하세요.
 
 ```bash
 pnpm generate
 
-# You can also provide the title and date directly:
+# 제목과 날짜를 직접 제공할 수도 있습니다:
 pnpm generate 'Your Title' '2022-03-03'
 ```
 
-Follow the prompts for the post title and date. This will generate a new MDX file in src/posts and a corresponding image folder in public/images.
+포스트 제목과 날짜를 입력하는 프롬프트를 따르세요. 그러면 src/posts에 새 MDX 파일과 public/images에 해당 이미지 폴더가 생성됩니다.
+
+![생성커맨드 이미지](public/readme-image/generate.png)
+
+
 
 ### Plop Template 'post.hbs'
 
@@ -32,7 +36,7 @@ Write your post content here.
 
 ## Deployment
 
-Automatically deploy new posts with GitHub Actions. Just commit and push your changes:
+GitHub Actions를 통해 새 포스트를 자동으로 배포합니다. 변경 사항을 커밋하고 푸시하세요:
 
 ```bash
 git add .
@@ -42,11 +46,11 @@ git push origin main
 
 ## Testing
 
-We use [Vitest](https://vitest.dev/) to test the Plop generator and post parser
+[Vitest](https://vitest.dev/) Plop 생성기와 포스트 파서를 테스트합니다.
 
 ### Plop Generator Test
 
-Tests the Plop generator to ensure that new posts and image folders are created correctly.
+새 포스트와 이미지 폴더가 올바르게 생성되는지 Plop 생성기를 테스트합니다.
 
 ```typescript
 it('should generate a new post and image folder', () => {
@@ -59,7 +63,7 @@ it('should generate a new post and image folder', () => {
 
 ### Post Parser Test
 
-Tests the parsing and generation of posts to ensure that metadata and content are handled correctly.
+메타데이터와 콘텐츠가 올바르게 처리되는지 포스트 파싱과 생성을 테스트합니다.
 
 ```typescript
 beforeAll(() => {
