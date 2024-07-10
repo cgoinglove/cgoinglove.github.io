@@ -7,3 +7,48 @@ thumbnail: '/images/강력한-타입-추론을-활용한-api-작성-패턴/thumb
 Write your post content here.
 
 ![image](../../public/images/강력한-타입-추론을-활용한-api-작성-패턴/thumbnail.gif)
+
+```typescript 
+type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
+
+type ApiEndpoint<M extends HttpMethod, Url extends string, Request = void, Response = void> = {
+  method: M;
+  url: Url;
+  requestData: Request;
+  responseData: Response;
+};
+
+type ApiSpec =
+  | ApiEndpoint<'GET', '/user', { email: string }, { name: string }>
+  | ApiEndpoint<'POST', '/user', { password: string }, { email: string }>
+  | ApiEndpoint<'GET', '/role', { email: string }, { rolename: string }>;
+
+type InferUrl<M extends HttpMethod> = Extract<
+  ApiSpec,
+  {
+    method: M;
+  }
+>['url'];
+
+type InferRequestData<M extends HttpMethod, Url extends InferUrl<M>> = Extract<
+  ApiSpec,
+  {
+    method: M;
+    url: Url;
+  }
+>['requestData'];
+
+type InferResponseData<M extends HttpMethod, Url extends InferUrl<M>> = Extract<
+  ApiSpec,
+  {
+    method: M;
+    url: Url;
+  }
+>['responseData'];
+
+type ApiClient = {
+  get<Url extends InferUrl<'GET'>>(url: Url, data: InferRequestData<'GET', Url>): Promise<InferResponseData<'GET', Url>>;
+  post<Url extends InferUrl<'POST'>>(url: Url, data: InferRequestData<'POST', Url>): Promise<InferResponseData<'POST', Url>>;
+};
+
+```
