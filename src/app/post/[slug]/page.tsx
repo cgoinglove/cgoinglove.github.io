@@ -5,6 +5,16 @@ import { PostManager } from '@lib/post-manager';
 import MDXRenderer from '@components/markdown';
 
 export async function generateStaticParams() {
+  if (process.env.NODE_ENV == 'development')
+    return PostManager.getAll().flatMap((v) => [
+      {
+        slug: encodeURI(v.slug),
+      },
+      {
+        slug: v.slug,
+      },
+    ]);
+
   return PostManager.getAll().map((v) => ({
     slug: decodeURIComponent(v.slug),
   }));

@@ -2,27 +2,81 @@
 title: '강력한 타입 추론을 활용한 API 작성 패턴'
 date: '2024-07-10'
 thumbnail: '/images/강력한-타입-추론을-활용한-api-작성-패턴/thumbnail.gif'
+summary: '프로젝트를 진행하면서 API 작성에 대한 컨벤션에 대해 고민해 본 적이 있으신가요? TS가 메인스트림이 되면서 수백개가 넘는 API Type 정의 방식에 대한 많은 고민들이 나옵니다.'
 ---
 
-Write your post content here.
+> 프로젝트를 진행하면서 API 작성에 대한 컨벤션에 대해 고민해 본 적이 있으신가요?
 
-![image](../../public/images/강력한-타입-추론을-활용한-api-작성-패턴/thumbnail.gif)
+서버와 클라이언트 간의 데이터 통신을 원활하게 처리하기 위해서는 신뢰할 수 있고 일관된 방식으로 API를 호출하는 것이 중요합니다.
+그러나 많은 개발자들이 API 호출 시 중복된 코드와 타입 오류 혹은 번거러움으로 인해 어려움을 겪고 있습니다.
 
-```typescript 
-type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
+특히, TS가 메인스트림이 되면서 수백개가 넘는 API Type 정의 방식에 대한 많은 고민들이 나옵니다.
 
-type ApiEndpoint<M extends HttpMethod, Url extends string, Request = void, Response = void> = {
-  method: M;
-  url: Url;
-  requestData: Request;
-  responseData: Response;
+## 함수 선언을 통한 API 호출
+
+```typescript
+export const getArticleById = (slug: number): Promise<ArticleDto> => {
+  return fetch(`/article/${slug}`).then((res) => res.json());
 };
 
-type ApiSpec =
-  | ApiEndpoint<'GET', '/user', { email: string }, { name: string }>
-  | ApiEndpoint<'POST', '/user', { password: string }, { email: string }>
-  | ApiEndpoint<'GET', '/role', { email: string }, { rolename: string }>;
+// import { getArticleById } from '@service/api/article';
 
+const fetchArticle = async () => {
+  const data = await getArticleById(slug);
+  setState(data);
+};
+
+useEffect(() => {
+  fetchArticle();
+}, [slug]);
+```
+
+대부분의 경우, API 호출을 보다 관리하기 쉽게 하기 위해 함수 선언을 사용합니다.
+API 함수 선언형 방식은 코드의 재사용성을 높이고, API 호출 로직을 중앙집중화하여 관리할 수 있게 해줍니다.
+
+> 하지만 이 접근 방식에도 한계가 있습니다.
+> API의 엔드포인트가 변경될 때마다 이를 반영하기 위해 여러 함수들을 수정해야 하며, 엔드포인트 URL의 오타를 사전에 방지하기 어렵습니다.
+> 이러한 문제를 해결하기 위해, 함수 선언 대신 타입 선언을 통해 API 호출을 보다 안정적이고 효율적으로 관리할 수 있는 새로운 패턴을 소개합니다.
+
+## Api Spec 작성을 통한 API 호출
+
+![사용이미지](../../public/images/강력한-타입-추론을-활용한-api-작성-패턴/thumbnail.gif)
+
+함수는 동작을 정의하지만, 타입은 데이터 구조와 그 관계를 정의합니다. 우리는 이 강력한 타입스크립트의 타입 시스템을 활용하여 API 호출을 더욱 견고하게 만들 수 있습니다.
+이 패턴은 Redux의 Reducer Action에서 영감을 받아 만들어졌습니다.
+
+#### 1. API 엔드포인트 타입 정의
+
+```typescript
+type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
+
+type ApiEndpoint<
+  M extends HttpMethod,
+  Url extends string,
+  Request = void,
+  Response = void,
+> = {
+  method: M;
+  url: Url;
+  requestPayload: Request;
+  responseData: Response;
+};
+```
+
+#### 2.API 명세 정의
+
+```typescript
+type ApiSpec =
+  | ApiEndpoint<'GET', '/user', { email: string }, UserDto>
+  | ApiEndpoint<'PUT', '/user', { name: string }, void>
+  | ApiEndpoint<'GET', '/role', { roleId: string }, { rolename: string }>
+  ...;
+```
+
+#### 3.URL, Request, Response 추론 타입 정의
+
+```typescript
+// Method 로 Url 추론
 type InferUrl<M extends HttpMethod> = Extract<
   ApiSpec,
   {
@@ -30,14 +84,19 @@ type InferUrl<M extends HttpMethod> = Extract<
   }
 >['url'];
 
-type InferRequestData<M extends HttpMethod, Url extends InferUrl<M>> = Extract<
+// Methoh 와 Url 로 Request Query or Body 추론
+type InferRequestPayload<
+  M extends HttpMethod,
+  Url extends InferUrl<M>,
+> = Extract<
   ApiSpec,
   {
     method: M;
     url: Url;
   }
->['requestData'];
+>['requestPayload'];
 
+// Methoh 와 Url 로 Response Data 추론
 type InferResponseData<M extends HttpMethod, Url extends InferUrl<M>> = Extract<
   ApiSpec,
   {
@@ -45,10 +104,38 @@ type InferResponseData<M extends HttpMethod, Url extends InferUrl<M>> = Extract<
     url: Url;
   }
 >['responseData'];
+```
 
+Redux에서 Action 타입은 타입(type)에 따라 서로 다른 페이로드(payload)를 다르게 추론하게 됩니다.
+
+ApiSpec 의 method에 따라 url이 추론되고 method & url 에 따라 요청/응답 데이터를 다르게 추론하게 됩니다.
+
+#### 4. API 클라이언트 정의
+
+```typescript
 type ApiClient = {
   get<Url extends InferUrl<'GET'>>(url: Url, data: InferRequestData<'GET', Url>): Promise<InferResponseData<'GET', Url>>;
   post<Url extends InferUrl<'POST'>>(url: Url, data: InferRequestData<'POST', Url>): Promise<InferResponseData<'POST', Url>>;
+  // ...
 };
 
+const api:ApiClient = {
+  get:()...,
+  post:()...,
+}
+
 ```
+
+## Api Spec 선언의 장점
+
+- 강력한 타입 안정성: API 명세를 타입으로 정의함으로써 요청 및 응답 데이터의 타입을 컴파일 타임에 체크할 수 있습니다. 이를 통해 타입 오류를 사전에 방지할 수 있습니다.
+  코드 중복 최소화: API 호출 함수를 일관된 방식으로 작성할 수 있어 코드 중복을 줄일 수 있습니다.
+
+- 유지보수 용이성: 엔드포인트가 추가되거나 변경될 때 타입 정의만 수정하면 되므로 유지보수가 용이합니다.
+
+- 가독성 향상: API 명세가 명확히 정의되어 있어 코드를 읽기 쉽고 이해하기 쉬워집니다.
+
+- 기존의 API 호출 방법은 간단하지만, 타입 안정성과 유지보수성에서 한계가 있습니다.
+
+URL의 경로 변수 처리, 여러 도메인 서비스의 명세 분리 등 더 자세한 내용은 [Typescript Api Spec Guied Repository](#)에서 확인하실 수 있습니다.
+이 레포지토리에서 API 명세 작성에 대한 전체적인 접근 방법을 더욱 깊이 있게 탐구해 보세요.

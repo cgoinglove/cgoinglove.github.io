@@ -32,6 +32,7 @@ export const parsePost = (originContent: string): Omit<Post, 'slug'> => {
     content: string;
     data: Partial<PostMetadata>;
   };
+
   metadata.summary ??= content
     .replace(/!\[.*?\]\(.*?\)/g, '') // 이미지 제거
     .replace(/```[\s\S]*?```/g, '') // 코드 블록 제거
@@ -46,8 +47,10 @@ export const parsePost = (originContent: string): Omit<Post, 'slug'> => {
     .replace(/\s\s+/g, ' ') // 연속된 공백을 최대 1개로 제한
     .trim()
     .slice(0, 100);
-  if ([metadata.date, metadata.title, metadata.thumbnail].some(isNull))
+  if ([metadata.date, metadata.title, metadata.thumbnail].some(isNull)) {
+    console.log(metadata);
     throw new Error(`Missing required metadata`);
+  }
 
   const dateInstance = dayjs(metadata.date, 'YYYY-MM-DD');
 

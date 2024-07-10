@@ -34,7 +34,7 @@ export default function PostCard({ metadata, slug }: Post) {
         </figcaption>
         <div className="flex flex-col p-8 justify-between">
           <blockquote className="my-4">
-            <p className="text-zinc-500 group-hover:text-zinc-400 transition-colors">
+            <p className="text-zinc-500 group-hover:text-zinc-400 transition-colors text-ellipsis">
               {metadata.summary}
             </p>
           </blockquote>
