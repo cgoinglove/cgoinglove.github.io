@@ -7,7 +7,7 @@ const AllPosts = scan(join(process.cwd(), 'src', 'posts', '*.mdx'));
 const PostBySlug = arrayToMap(AllPosts, (post) => post.slug);
 
 export const PostManager = {
-  getBySlug: (slug: string) => PostBySlug.get(slug),
+  getBySlug: (slug: string) => PostBySlug.get(decodeURIComponent(slug)),
   getAll: () =>
-    [...AllPosts].sort((a, b) => a.metadata.timestamp - b.metadata.timestamp),
+    [...AllPosts].sort((a, b) => b.metadata.timestamp - a.metadata.timestamp),
 };

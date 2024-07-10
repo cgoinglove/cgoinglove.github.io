@@ -5,7 +5,10 @@ import { PostManager } from '@lib/post-manager';
 import MDXRenderer from '@components/markdown';
 
 export async function generateStaticParams() {
-  return PostManager.getAll().map((v) => ({ slug: v.slug }));
+  return PostManager.getAll().flatMap((v) => [
+    { slug: encodeURIComponent(v.slug) },
+    { slug: v.slug },
+  ]);
 }
 
 export async function generateMetadata(props: { params: { slug: string } }) {

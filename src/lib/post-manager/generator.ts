@@ -3,10 +3,23 @@ import matter from 'gray-matter';
 import dayjs from 'dayjs';
 import { isNull } from '@lib/shared';
 
-export const generatePost = (path: string): Post => {
-  const slug = path.split('/').at(-1)!.replace('.mdx', '');
-  const originContent = fs.readFileSync(path, { encoding: 'utf-8' });
-  const { metadata, content } = parsePost(originContent);
+type ContentTransformer = (originalContent: string) => string;
+
+export const generatePost = (
+  filePath: string,
+  transformers?: ContentTransformer[]
+): Post => {
+  const slug = filePath.split('/').at(-1)!.replace('.mdx', '');
+  const originalContent = fs.readFileSync(filePath, { encoding: 'utf-8' });
+  const transformedContent = transformers
+    ? transformers.reduce(
+        (content, transformer) => transformer(content),
+        originalContent
+      )
+    : originalContent;
+
+  const { metadata, content } = parsePost(transformedContent);
+
   return {
     content,
     metadata,
