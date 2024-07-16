@@ -7,6 +7,9 @@
   letter-spacing: -0.004em;
   word-break: keep-all;
   overflow-wrap: break-word;
+  strong {
+    color: #ededed;
+  }
   h1 {
     font-size: 1.8rem;
   }
@@ -78,12 +81,6 @@
   p code {
     font-weight: 600;
     color: rgb(244 244 245);
-    &::before {
-      content: '`';
-    }
-    &::after {
-      content: '`';
-    }
   }
   blockquote {
     margin: 2rem 0px;
