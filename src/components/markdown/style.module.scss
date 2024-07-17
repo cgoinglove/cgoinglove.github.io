@@ -7,6 +7,7 @@
   letter-spacing: -0.004em;
   word-break: keep-all;
   overflow-wrap: break-word;
+
   strong {
     color: #ededed;
   }
@@ -113,9 +114,11 @@
     margin-top: 2rem;
     margin-bottom: 2rem;
   }
+  figure {
+    overflow-x: scroll;
+  }
   pre {
     position: relative;
-
     font-family: 'Fira Mono', source-code-pro, Menlo, Monaco, Consolas,
       'Courier New', monospace;
     background: black !important;
@@ -128,36 +131,35 @@
     font-weight: 400;
     line-height: 1.7142857;
     margin: 0;
-    overflow-x: auto;
     padding: 2rem;
-    margin: 2rem 0;
-    button {
-      color: #adbac7;
-      position: absolute;
-      top: 0;
-      font-size: 14px;
-      right: 0;
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: inherit;
-      border-color: inherit;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      /* opacity: 0.6; */
-      margin: 0.8rem 1rem;
-      transition: all 0.2s;
-      &:hover {
-        background-color: #3f3f46;
-      }
-    }
-
+    width: 100%;
     code {
       padding: 0;
+      position: relative;
+
+      width: 100%;
+      overflow-x: auto;
       background-color: inherit;
     }
   }
+  [data-rehype-pretty-code-figure] code {
+    counter-reset: line;
+  }
+
+  [data-rehype-pretty-code-figure] [data-line]::before {
+    counter-increment: line;
+  }
+
+  [data-line]::before {
+    content: counter(line);
+
+    display: inline-block;
+    width: 1rem;
+    margin-right: 1rem;
+    text-align: right;
+    color: gray;
+  }
+
   table {
     border-spacing: 0;
     border-collapse: collapse;
@@ -165,7 +167,7 @@
     width: max-content;
 
     margin: 1rem 0;
-    max-width: 100%;
+    width: 100%;
     overflow: auto;
     box-sizing: border-box;
     text-indent: initial;

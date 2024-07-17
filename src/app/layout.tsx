@@ -38,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${roboto.className} text-default relative flex items-center h-full w-full flex-col bg-black`}
       >
-        <div className="max-w-[1080px] absolute">
+        <div className="max-w-full absolute">
           <main className="flex justify-center sm:px-8 min-h-screen ">
             <div className="relative w-full ">{children}</div>
           </main>
