@@ -38,6 +38,6 @@ describe('Plop Generator', () => {
 });
 // Clean up generated files
 afterAll(() => {
-  fs.unlinkSync(postPath);
-  fs.rmdirSync(imagePath, { recursive: true });
+  fs.existsSync(postPath) && fs.unlinkSync(postPath);
+  fs.existsSync(imagePath) && fs.rmdirSync(imagePath, { recursive: true });
 });

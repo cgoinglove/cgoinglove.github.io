@@ -8,7 +8,7 @@ import { PostManager } from '@lib/post-manager';
 
 export default function Home() {
   return (
-    <div className="flex flex-col relative mx-3">
+    <div className="flex flex-col relative mx-3 max-w-[1080px]">
       <section className="relative w-full flex flex-col md:flex-row md:items-center">
         <div className="h-full w-full md:w-1/3 flex p-8 justify-center">
           <div className="py-4 md:py-6 px-8 block rounded-lg hover:bg-white/10 ">
