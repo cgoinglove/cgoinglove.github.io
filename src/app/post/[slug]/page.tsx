@@ -75,7 +75,7 @@ export default async function Page(props: { params: { slug: string } }) {
               'linear-gradient(to top, transparent 15%,rgb(0 0 0)  100%)',
           }}
         />
-        <div className="px-8 sm:px-24 w-full  max-w-full lg:mx-auto pt-[300px]">
+        <div className="px-8 sm:px-24 w-full max-w-full xl:max-w-[1200px] lg:mx-auto pt-[300px]">
           <div className="flex justify-center">
             <h1 className="relative mt-6 text-4xl font-bold tracking-tight sm:text-5xl text-zinc-300">
               {metadata.title}
