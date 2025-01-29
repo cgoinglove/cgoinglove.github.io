@@ -53,7 +53,7 @@ export default function Header() {
                       <button
                         className="group flex items-center rounded-full  px-4 py-2 text-sm font-medium shadow-lg shadow-zinc-800/5 ring-1 backdrop-blur bg-zinc-850/10 text-zinc-200 ring-white/10 hover:ring-white/20"
                         type="button"
-                        onClick={router.back}
+                        onClick={() => router.push('/')}
                       >
                         <svg
                           viewBox="0 0 8 6"
