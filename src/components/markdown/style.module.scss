@@ -1,6 +1,7 @@
 .cgoing-markdown {
   width: 100%;
   position: relative;
+  color: white;
   font-size: 0.8rem;
   transition: color 0.125s ease-in 0s;
   line-height: 1.7;
@@ -8,9 +9,9 @@
   word-break: keep-all;
   overflow-wrap: break-word;
 
-  strong {
+  /* strong {
     color: #ededed;
-  }
+  } */
   h1 {
     font-size: 1.8rem;
   }
@@ -25,7 +26,6 @@
   h3,
   h4 {
     font-weight: bold;
-    color: #ededed;
     margin-top: 4rem;
   }
   ol {
@@ -81,7 +81,11 @@
   ol code,
   p code {
     font-weight: 600;
-    color: rgb(244 244 245);
+    border: 1px solid;
+    border-color: #363636;
+    border-radius: 4px;
+    background: black;
+    padding: 2px 5px;
   }
   blockquote {
     margin: 2rem 0px;

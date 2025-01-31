@@ -53,7 +53,7 @@ export default async function Page(props: { params: { slug: string } }) {
   const { metadata, content, slug } = PostManager.getBySlug(props.params.slug)!;
 
   return (
-    <>
+    <div className="max-w-[1080px]">
       <Header />
       <div className="flex flex-col relative">
         <div
@@ -94,6 +94,6 @@ export default async function Page(props: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
