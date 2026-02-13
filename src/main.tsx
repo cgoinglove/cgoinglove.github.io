@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
+import { LanguageProvider } from "./context/language.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Toaster />
-    <App />
+    <LanguageProvider>
+      <Toaster />
+      <App />
+    </LanguageProvider>
   </StrictMode>,
 );

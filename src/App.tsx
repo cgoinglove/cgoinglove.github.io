@@ -2,12 +2,30 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { AudioWaveform, Plus } from "lucide-react";
 import { MessageBubble } from "@/components/chat/message-bubble";
 
-import { greetingSteps, questions, farewellSteps } from "@/data/questions";
+import { getGreetingSteps, getQuestions, getFarewellSteps } from "@/data/questions";
 import type { Message, QuestionConfig } from "@/types";
 import { Button } from "./components/ui/button";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/language";
+import { LanguageToggle } from "@/components/language-toggle";
+
+const ui = {
+  ko: {
+    userInit: "cgoing 궁금해서 이곳에 왔어요",
+    toastLoading: "잠시만 기다려주세요... AI 연결중입니다...",
+    toastSuccess: "응 뻥이야 😘",
+    placeholder: "위 버튼을 눌러 질문해 보세요",
+  },
+  en: {
+    userInit: "I came here curious about cgoing",
+    toastLoading: "Please wait... Connecting AI...",
+    toastSuccess: "Just kidding 😘",
+    placeholder: "Click a button above to ask",
+  },
+} as const;
 
 export default function App() {
+  const { locale } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(
     new Set(),
@@ -19,7 +37,6 @@ export default function App() {
   const scrollToBottom = useCallback(() => {
     const container = chatContainerRef.current;
     if (container) {
-      // container.scrollTop = container.scrollHeight
       container.scrollTo({
         top: container.scrollHeight,
         behavior: "smooth",
@@ -36,19 +53,22 @@ export default function App() {
 
   const farewellAddedRef = useRef(false);
 
+  const questions = getQuestions(locale);
+
   const handleAllDone = useCallback(() => {
+    const qs = getQuestions(locale);
     setAnsweredQuestions((prev) => {
-      const allAnswered = questions.every((q) => prev.has(q.id));
+      const allAnswered = qs.every((q) => prev.has(q.id));
       if (allAnswered && !farewellAddedRef.current) {
         farewellAddedRef.current = true;
         setTimeout(() => {
           setMessages((msgs) => [
             ...msgs,
             {
-              id: "farewell",
+              id: `farewell-${locale}`,
               role: "assistant",
               content: "",
-              steps: farewellSteps,
+              steps: getFarewellSteps(locale),
               state: "complete",
             },
           ]);
@@ -59,26 +79,30 @@ export default function App() {
       }
       return prev;
     });
-  }, []);
+  }, [locale]);
 
-  // Initial greeting
+  // Initial greeting + reset on locale change
   useEffect(() => {
+    farewellAddedRef.current = false;
+    processingRef.current = true;
+    setIsProcessing(true);
+    setAnsweredQuestions(new Set());
     setMessages([
       {
-        id: "user-init",
+        id: `user-init-${locale}`,
         role: "user",
-        content: "cgoing 궁금해서 이곳에 왔어요",
+        content: ui[locale].userInit,
         state: "complete",
       },
       {
-        id: "greeting",
+        id: `greeting-${locale}`,
         role: "assistant",
         content: "",
-        steps: greetingSteps,
+        steps: getGreetingSteps(locale),
         state: "complete",
       },
     ]);
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     scrollToBottom();
@@ -130,8 +154,12 @@ export default function App() {
     (q) => !answeredQuestions.has(q.id),
   );
 
+  const t = ui[locale];
+
   return (
     <div className="h-dvh flex flex-col bg-background/40 relative overflow-hidden">
+      <LanguageToggle />
+
       {/* Messages */}
       <div
         ref={chatContainerRef}
@@ -169,12 +197,12 @@ export default function App() {
               {
                 loading: (
                   <div className="flex items-center gap-1">
-                    잠시만 기다려주세요... AI 연결중입니다...
+                    {t.toastLoading}
                   </div>
                 ),
                 success: (
                   <span className="fade-in animate-in duration-1000">
-                    응 뻥이야 😘
+                    {t.toastSuccess}
                   </span>
                 ),
               },
@@ -187,7 +215,7 @@ export default function App() {
             </Button>
             <input
               type="text"
-              placeholder="위 버튼을 눌러 질문해 보세요"
+              placeholder={t.placeholder}
               disabled
               className="flex-1 text-xs bg-transparent outline-none placeholder:text-muted-foreground/50 cursor-default"
             />

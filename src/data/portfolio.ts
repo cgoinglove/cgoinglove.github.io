@@ -59,11 +59,13 @@ export interface PortfolioData {
   maintainedProjects: MaintainedProject[];
 }
 
+import type { Locale } from "@/context/language";
+
 // ============================================================
 // YOUR DATA — Replace with your actual information
 // ============================================================
 
-export const portfolio: PortfolioData = {
+const portfolioKo: PortfolioData = {
   profile: {
     name: "cgoing",
     title: "Fullstack Engineer",
@@ -146,14 +148,7 @@ export const portfolio: PortfolioData = {
   ],
 
   openSourcePRs: [
-    {
-      repo: "modelcontextprotocol/modelcontextprotocol",
-      title:
-        "docs: re-submit mcp-client-chatbot example based on latest main branch",
-      prNumber: 900,
-      url: "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/900",
-      status: "merged",
-    },
+ 
     {
       repo: "vercel/ai",
       title:
@@ -174,6 +169,14 @@ export const portfolio: PortfolioData = {
       title: "feat(examples): add example-with-typeorm",
       prNumber: 8143,
       url: "https://github.com/vercel/turborepo/pull/8143",
+      status: "merged",
+    },
+    {
+      repo: "modelcontextprotocol/modelcontextprotocol",
+      title:
+        "docs: re-submit mcp-client-chatbot example based on latest main branch",
+      prNumber: 900,
+      url: "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/900",
       status: "merged",
     },
     {
@@ -260,3 +263,94 @@ export const portfolio: PortfolioData = {
     },
   ],
 };
+
+const portfolioEn: PortfolioData = {
+  profile: {
+    ...portfolioKo.profile,
+    headline: "Let's build AI services together!",
+    tagline:
+      "A fullstack developer who loves TypeScript and AI. I run my own services, contribute to open source, and build the tools I need from scratch.",
+    experience: "8 yrs",
+  },
+
+  workExperience: [
+    {
+      company: "Korean Air",
+      role: "Lead Frontend Engineer (Freelancer)",
+      period: "2023 — Present",
+      description:
+        "Frontend lead & fullstack dev for the Tier-1 OpsCore flight-ops system. Designed and built an in-house real-time chat system, saving ~$50-60K vs. external solutions. Currently leading a Vertex AI-based RAG chatbot that queries airline databases directly.",
+      tags: portfolioKo.workExperience[0].tags,
+      logoUrl: portfolioKo.workExperience[0].logoUrl,
+    },
+    {
+      company: "ISU System",
+      role: "Lead Fullstack Engineer (Freelancer)",
+      period: "2020 — 2023",
+      description:
+        "Migrated a recruitment solution from legacy Java SSR/JSP to Vue + Spring Boot. Set up initial frontend packages for core HR solution migration and built a TUS-protocol large file upload module. Made my first OSS contribution to Uppy (30k stars) in the process.",
+      tags: portfolioKo.workExperience[1].tags,
+      logoUrl: portfolioKo.workExperience[1].logoUrl,
+    },
+    {
+      company: "NICE Info",
+      role: "Fullstack Engineer (Freelancer)",
+      period: "2019 — 2020",
+      description:
+        "Fullstack development of NICE BizLINE, a corporate data summary & API marketplace. Responsible for auth systems and file upload/download modules.",
+      tags: portfolioKo.workExperience[2].tags,
+      logoUrl: portfolioKo.workExperience[2].logoUrl,
+    },
+    {
+      company: "Samsung Card",
+      role: "Frontend Engineer (Freelancer)",
+      period: "2018 — 2019",
+      description:
+        "Built Samsung Card's mobile app service with Nuxt + PWA, delivering a near-native user experience via web technologies for cross-platform service.",
+      tags: portfolioKo.workExperience[3].tags,
+      logoUrl: portfolioKo.workExperience[3].logoUrl,
+    },
+  ],
+
+  openSourcePRs: portfolioKo.openSourcePRs,
+
+  runningServices: [
+    {
+      ...portfolioKo.runningServices[0],
+      description:
+        "Running an MCP-based AI chatbot framework as a live service. A fullstack AI chatbot platform supporting Dify/n8n-style workflows, voice agents, and MCP bindings.",
+    },
+    {
+      ...portfolioKo.runningServices[1],
+      description:
+        "A next-level AI education service. AI generates personalized problems and provides guided learning through wrong-answer-based reports. Community-driven workbook sharing is the key differentiator.",
+    },
+  ],
+
+  maintainedProjects: [
+    {
+      ...portfolioKo.maintainedProjects[0],
+      description:
+        "MCP Chatbot — a fullstack AI chatbot framework with Dify/n8n-style workflows, voice agents, and MCP bindings. First known GitHub project to connect voice agents with MCP.",
+    },
+    {
+      ...portfolioKo.maintainedProjects[1],
+      description:
+        "A lightweight type-safe workflow engine. Build node-based pipelines safely in TypeScript.",
+    },
+    {
+      ...portfolioKo.maintainedProjects[2],
+      description:
+        "Wraps the Kakao Map API as an MCP server so AI agents can instantly use map search and route finding.",
+    },
+    {
+      ...portfolioKo.maintainedProjects[3],
+      description:
+        "A minimalist functional utility library. Provides type-safe error handling with Result/Option patterns.",
+    },
+  ],
+};
+
+export function getPortfolio(locale: Locale): PortfolioData {
+  return locale === "en" ? portfolioEn : portfolioKo;
+}
