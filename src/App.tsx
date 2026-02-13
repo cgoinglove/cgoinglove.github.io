@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, lazy } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { AudioWaveform, Plus } from "lucide-react";
 import { MessageBubble } from "@/components/chat/message-bubble";
 
